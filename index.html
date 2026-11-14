@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuickCalc - Free Online Calculator</title>
+<meta name="description" content="Free online percentage calculator for discounts, increases and percentage changes.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f5fa;color:#17243b}
+header{background:#173b78;color:white;padding:25px 18px;text-align:center}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;color:#dce8ff}
+main{max-width:850px;margin:25px auto;padding:0 15px}
+.top{display:flex;justify-content:flex-end;margin-bottom:15px}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 16px;font-size:15px}
+.lang{background:#2457d6;color:white}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 4px 16px #15294a12}
+h2{font-size:19px;margin-top:0}
+label{display:block;margin:12px 0 5px;color:#52627a}
+input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:17px}
+.result{background:#edf3ff;color:#17449b;padding:13px;margin-top:15px;border-radius:9px;font-size:22px;font-weight:bold}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.primary{background:#2457d6;color:white}
+.secondary{background:#e7edf7;color:#17243b}
+footer{text-align:center;padding:25px;color:#68778d}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>QuickCalc</h1>
+<p id="subtitle">Free online percentage calculator</p>
+</header>
+<main>
+<div class="top">
+<button class="lang" onclick="toggleLang()" id="language">العربية</button>
+</div>
+<div class="grid">
+<section class="card">
+<h2 id="title1">What is X% of Y?</h2>
+<label id="label1">Percentage (%)</label>
+<input id="p" type="number" value="15">
+<label id="label2">Number</label>
+<input id="n" type="number" value="200">
+<div class="result"><span id="result1">Result:</span> <span id="r1">30</span></div>
+</section>
+<section class="card">
+<h2 id="title2">Discount Calculator</h2>
+<label id="label3">Original price</label>
+<input id="price" type="number" value="100">
+<label id="label4">Discount (%)</label>
+<input id="discount" type="number" value="20">
+<div class="result"><span id="result2">Final price:</span> <span id="r2">80</span></div>
+</section>
+<section class="card">
+<h2 id="title3">Increase or Decrease</h2>
+<label id="label5">Starting value</label>
+<input id="start" type="number" value="80">
+<label id="label6">Change (%)</label>
+<input id="change" type="number" value="25">
+<div class="actions">
+<button class="primary" onclick="changeValue(1)" id="increase">Increase</button>
+<button class="secondary" onclick="changeValue(-1)" id="decrease">Decrease</button>
+</div>
+<div class="result"><span id="result3">New value:</span> <span id="r3">100</span></div>
+</section>
+<section class="card">
+<h2 id="title4">Percentage Change</h2>
+<label id="label7">Old value</label>
+<input id="old" type="number" value="50">
+<label id="label8">New value</label>
+<input id="new" type="number" value="65">
+<div class="result"><span id="result4">Change:</span> <span id="r4">30%</span></div>
+</section>
+</div>
+</main>
+<footer id="footer">QuickCalc — Free tools, simple answers.</footer>
+<script>
+const $=id=>document.getElementById(id);
+let direction=1,lang="en";
+function num(id){return Number($(id).value)||0}
+function calc(){
+$("r1").textContent=(num("p")*num("n")/100).toLocaleString();
+$("r2").textContent=(num("price")*(1-num("discount")/100)).toLocaleString();
+$("r3").textContent=(num("start")*(1+direction*num("change")/100)).toLocaleString();
+let old=num("old"),now=num("new");
+$("r4").textContent=old===0?"—":(((now-old)/old)*100).toFixed(2)+"%";
+}
+function changeValue(d){direction=d;calc()}
+["p","n","price","discount","start","change","old","new"].forEach(id=>$(id).addEventListener("input",calc));
+function toggleLang(){
+lang=lang==="en"?"ar":"en";
+let ar=lang==="ar";
+document.documentElement.lang=lang;
+document.documentElement.dir=ar?"rtl":"ltr";
+const words=ar?[
+"حاسبة النسب المئوية المجانية","احسب النسب بسهولة",
+"كم يساوي X٪ من Y؟","النسبة المئوية (%)","الرقم","النتيجة:",
+"حاسبة الخصم","السعر الأصلي","الخصم (%)","السعر النهائي:",
+"الزيادة أو النقصان","القيمة الأصلية","نسبة التغيير (%)",
+"زيادة","نقصان","القيمة الجديدة:",
+"نسبة التغير","القيمة القديمة","القيمة الجديدة","التغير:",
+"أدوات مجانية ونتائج بسيطة."
+]:[
+"Free online percentage calculator","Calculate percentages easily",
+"What is X% of Y?","Percentage (%)","Number","Result:",
+"Discount Calculator","Original price","Discount (%)","Final price:",
+"Increase or Decrease","Starting value","Change (%)",
+"Increase","Decrease","New value:",
+"Percentage Change","Old value","New value","Change:",
+"QuickCalc — Free tools, simple answers."
+];
+$("subtitle").textContent=words[1];
+["title1","label1","label2","result1","title2","label3","label4","result2","title3","label5","label6","increase","decrease","result3","title4","label7","label8","result4","footer"].forEach((id,i)=>$(id).textContent=words[[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20][i]]);
+$("language").textContent=ar?"English":"العربية";
+}
+calc();
+</script>
+</body>
+</html>
+
